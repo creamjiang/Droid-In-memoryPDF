@@ -18,6 +18,11 @@ public class MuPdfDocument extends AbstractCodecDocument {
     MuPdfDocument(final MuPdfContext context, final int format, final String fname, final String pwd) {
         super(context, open(AppSettings.current().pdfStorageSize << 20, format, fname, pwd));
     }
+    
+    MuPdfDocument(final MuPdfContext context, final int format, final byte[] srcData, final String pwd) {
+        super(context, openStream(AppSettings.current().pdfStorageSize << 20, format, srcData, pwd));
+        System.out.println ("Returned from openStream successuflly.");
+    }
 
     @Override
     public List<OutlineLink> getOutline() {
@@ -80,6 +85,8 @@ public class MuPdfDocument extends AbstractCodecDocument {
     native static int getPageInfo(long docHandle, int pageNumber, CodecPageInfo cpi);
 
     private static native long open(int storememory, int format, String fname, String pwd);
+    
+    private static native long openStream (int storememory, int format, byte[] srcData, String pwd);
 
     private static native void free(long handle);
 
