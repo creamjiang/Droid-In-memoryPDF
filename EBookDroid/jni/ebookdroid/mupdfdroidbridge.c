@@ -32,6 +32,7 @@ struct renderdocument_s
     fz_context *ctx;
     fz_document *document;
     fz_outline *outline;
+    unsigned char *pdfData;
     unsigned char format; // save current document format.
 };
 
@@ -91,6 +92,11 @@ static void mupdf_free_document(renderdocument_t* doc)
     }
 
     fz_locks_context *locks = doc->ctx->locks;
+
+    if (doc->pdfData)
+    {
+    	free (doc->pdfData);
+    }
 
     if (doc->outline)
     {
@@ -247,6 +253,7 @@ Java_org_ebookdroid_droids_mupdf_codec_MuPdfDocument_open(JNIEnv *env, jclass cl
     }
     doc->document = NULL;
     doc->outline = NULL;
+    doc->pdfData = NULL;
 
 //    fz_set_aa_level(fz_catch(ctx), alphabits);
     doc->format = format;
@@ -341,16 +348,15 @@ Java_org_ebookdroid_droids_mupdf_codec_MuPdfDocument_openStream
     {
 		if(format == FORMAT_PDF)
 		{ // FORMAT_PDF
-			unsigned char *result = NULL;
 		    jint length = (*env)->GetArrayLength(env, srcData);
-		    result = (unsigned char *)malloc(length + 1);
-		    if (result == NULL) {
+		    doc->pdfData = (unsigned char *)malloc(length + 1);
+		    if (doc->pdfData == NULL) {
 		        return 0;
 		    }
-		    (*env)->GetByteArrayRegion(env, srcData, 0, length, (jbyte *)result);
+		    (*env)->GetByteArrayRegion(env, srcData, 0, length, (jbyte *)doc->pdfData);
 
 			fz_stream *dataStream;
-			dataStream = fz_open_memory(doc->ctx, result, length);
+			dataStream = fz_open_memory(doc->ctx, doc->pdfData, length);
 			doc->document = (fz_document *)pdf_open_document_with_stream(doc->ctx, dataStream);
 		}
     }
