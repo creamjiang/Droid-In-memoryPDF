@@ -14,7 +14,16 @@ public interface CodecContext extends CodecFeatures {
      * @return an instance of a document
      */
     CodecDocument openDocument(String fileName, String password);
-
+    /**
+     * Open appropriate document
+     *
+     * @param fileData
+     *            document data
+     * @param password
+     *            optional document password
+     * @return an instance of a document
+     */
+    CodecDocument openDocument(byte[] fileData, String password);
     /**
      * @return context handler
      */

@@ -79,6 +79,11 @@ public class DecodeServiceBase implements DecodeService {
     public void open(final String fileName, final String password) {
         document = codecContext.openDocument(fileName, password);
     }
+    
+    @Override
+    public void open(byte[] fileData, final String password) {
+        document = codecContext.openDocument(fileData, password);
+    }
 
     @Override
     public CodecPageInfo getUnifiedPageInfo() {

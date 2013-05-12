@@ -2,6 +2,7 @@ package org.ebookdroid.droids.djvu.codec;
 
 import org.ebookdroid.EBookDroidLibraryLoader;
 import org.ebookdroid.core.codec.AbstractCodecContext;
+import org.ebookdroid.core.codec.CodecDocument;
 
 import org.emdev.common.log.LogContext;
 import org.emdev.common.log.LogManager;
@@ -37,4 +38,13 @@ public class DjvuContext extends AbstractCodecContext {
     private static native long create();
 
     private static native void free(long contextHandle);
+
+    /* (non-Javadoc)
+     * Stuf to satisfy compiler.
+     * @see org.ebookdroid.core.codec.CodecContext#openDocument(byte[], java.lang.String)
+     */
+    @Override
+    public CodecDocument openDocument(byte[] fileData, String password) {
+        return null;
+    }
 }

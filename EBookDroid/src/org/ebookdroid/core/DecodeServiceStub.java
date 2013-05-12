@@ -114,17 +114,33 @@ public class DecodeServiceStub implements DecodeService {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.ebookdroid.core.DecodeService#searchText(org.ebookdroid.core.Page, java.lang.String, org.ebookdroid.core.DecodeService.SearchCallback)
+     */
     @Override
     public void searchText(final Page page, final String pattern, final SearchCallback callback) {
     }
 
+    /* (non-Javadoc)
+     * @see org.ebookdroid.core.DecodeService#stopSearch(java.lang.String)
+     */
     @Override
     public void stopSearch(final String pattern) {
     }
 
+    /* (non-Javadoc)
+     * @see org.ebookdroid.core.DecodeService#createPageThumbnail(int, int, int, android.graphics.RectF)
+     */
     @Override
     public ByteBufferBitmap createPageThumbnail(int width, int height, int pageNo, RectF region) {
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.ebookdroid.core.DecodeService#open(byte[], java.lang.String)
+     */
+    @Override
+    public void open(byte[] fileData, String password) {
     }
 
 }

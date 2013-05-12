@@ -14,6 +14,8 @@ import java.util.List;
 public interface DecodeService extends CodecFeatures {
 
     void open(String fileName, String password);
+    
+    void open (byte[] fileData, String password);
 
     void decodePage(ViewState viewState, PageTreeNode node);
 

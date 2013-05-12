@@ -79,6 +79,15 @@ public class DocumentModel extends ListenerProxy {
     public void open(final String fileName, final String password) {
         decodeService.open(fileName, password);
     }
+    
+    /**
+     * Open a document using the data provided and password.
+     * @param fileData Data contents of the file.
+     * @param password Password for the file.
+     */
+    public void open(final byte[] fileData, final String password) {
+        decodeService.open(fileData, password);
+    }
 
     public Page[] getPages() {
         return pages;

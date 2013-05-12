@@ -59,7 +59,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -112,6 +115,8 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
     private final Intent intent;
 
     private String m_fileName;
+    
+    private byte[] m_fileData;
 
     private final NavigationHistory history;
 
@@ -247,6 +252,22 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
         } else {
             m_fileName = PathFromUri.retrieve(activity.getContentResolver(), uri);
         }
+        
+        // Now we have a file name, retrieve the data from the file
+        // and place it in m_fileData.
+        
+        File pdfFile = new File (m_fileName);
+        InputStream is;
+        try {
+            is = new FileInputStream (pdfFile);
+            m_fileData = getBytesUsingInputStream(is);
+        } catch (FileNotFoundException e) {
+            showErrorDlg(R.string.msg_file_not_found, m_fileName);
+            return;
+        } catch (IOException e) {
+            showErrorDlg(R.string.msg_cannot_read_file, m_fileName);
+            return;
+        }
 
         bookSettings = SettingsManager.create(id, m_fileName, scheme.temporary, intent);
         SettingsManager.applyBookSettingsChanges(null, bookSettings);
@@ -271,6 +292,45 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
             EBookDroidApp.checkInstalledFonts(getContext());
         }
         loadTask.run();
+    }
+    
+    /**
+     * Given an InputStream, retrieve the data as a byte array.
+     * @param inStream InputStream containing data.
+     * @return byte array of data from InputStream.
+     * @throws IOException
+     */
+    public byte[] getBytesUsingInputStream(InputStream inStream) throws IOException {
+        byte[] bytes = null;
+        // Get the size of the file
+        long streamLength;
+        streamLength = inStream.available();
+        if (streamLength > Integer.MAX_VALUE) {
+            // File is too large
+        }
+
+        // Create the byte array to hold the data
+        bytes = new byte[(int) streamLength];
+
+        // Read in the bytes
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+                && (numRead = inStream.read(bytes,
+                        offset, bytes.length - offset)) >= 0) {
+            offset += numRead;
+        }
+
+        // Ensure all the bytes have been read in
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file ");
+        }
+
+        // Close the input stream and return bytes
+        inStream.close();
+
+        return bytes;
+
     }
 
     /**
@@ -938,7 +998,10 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
                     setProgressDialogMessage(startProgressStringId);
                 }
                 getView().waitForInitialization();
-                documentModel.open(m_fileName, m_password);
+                
+                // Open PDF file using data content in file only.
+                documentModel.open(m_fileData, m_password);
+                
                 getDocumentController().init(this);
                 return null;
             } catch (final MuPdfPasswordException pex) {
@@ -954,6 +1017,8 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
                 LCTX.d("BookLoadTask.doInBackground(): finish");
             }
         }
+        
+
 
         @Override
         protected void onPostExecute(Throwable result) {
@@ -997,6 +1062,9 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
         public void setProgressDialogMessage(final int resourceID, final Object... args) {
             publishProgress(getManagedComponent().getString(resourceID, args));
         }
+        
+
+
     }
 
     final class SearchTask extends AsyncTask<String, String, RectF> implements SearchModel.ProgressCallback,

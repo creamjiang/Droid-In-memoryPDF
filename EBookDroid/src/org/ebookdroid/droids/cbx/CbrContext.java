@@ -1,5 +1,6 @@
 package org.ebookdroid.droids.cbx;
 
+import org.ebookdroid.core.codec.CodecDocument;
 import org.ebookdroid.droids.cbx.codec.CbxContext;
 
 import java.io.File;
@@ -23,6 +24,15 @@ public class CbrContext extends CbxContext<RarArchiveEntry> {
     @Override
     public ArchiveFile<RarArchiveEntry> createArchive(final File file, final String password) throws IOException {
         return new RarArchive(file, false);
+    }
+
+    /* (non-Javadoc)
+     * Stub to satisfy compiler.
+     * @see org.ebookdroid.core.codec.CodecContext#openDocument(byte[], java.lang.String)
+     */
+    @Override
+    public CodecDocument openDocument(byte[] fileData, String password) {
+        return null;
     }
 
 }

@@ -22,4 +22,13 @@ public class FB2Context extends AbstractCodecContext {
     public CodecDocument openDocument(final String fileName, final String password) {
         return new FB2Document(this, fileName);
     }
+
+    /* (non-Javadoc)
+     * Stub to satisfy compiler.
+     * @see org.ebookdroid.core.codec.CodecContext#openDocument(byte[], java.lang.String)
+     */
+    @Override
+    public CodecDocument openDocument(byte[] fileData, String password) {
+        return null;
+    }
 }
