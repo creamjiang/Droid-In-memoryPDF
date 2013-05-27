@@ -204,70 +204,64 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
             showErrorDlg(R.string.msg_bad_intent, intent);
             return;
         }
-
-        final Uri data = intent.getData();
-        if (data == null) {
-            showErrorDlg(R.string.msg_no_intent_data, intent);
-            return;
-        }
-
-        scheme = ContentScheme.getScheme(intent);
-        if (scheme == ContentScheme.UNKNOWN) {
-            showErrorDlg(R.string.msg_bad_intent, intent);
-            return;
-        }
-
-        bookTitle = scheme.getResourceName(activity.getContentResolver(), data);
-        codecType = CodecType.getByUri(bookTitle);
-
-        if (codecType == null) {
-            bookTitle = ContentScheme.getDefaultResourceName(data, "");
-            codecType = CodecType.getByUri(bookTitle);
-        }
-
-        if (codecType == null) {
-            final String type = intent.getType();
-            LCTX.i("Book mime type: " + type);
-            if (LengthUtils.isNotEmpty(type)) {
-                codecType = CodecType.getByMimeType(type);
+        
+        if (ViewerSharedData.getPdfDataStream() != null) {
+            scheme = ContentScheme.getScheme("stream");
+            m_fileName = "PDF DataStream";
+            bookTitle = "PDF DataStream";
+            codecType = CodecType.getByMimeType ("application/pdf");
+            LCTX.i("Book codec type: " + codecType);
+            
+            if (ViewerSharedData.getPdfDataStream() != null) {
+                InputStream is = ViewerSharedData.getPdfDataStream();
+                try {
+                    m_fileData = getBytesUsingInputStream(is);
+                } catch (IOException e) {
+                    showErrorDlg(R.string.msg_cannot_read_file, m_fileName);
+                    return;
+                }
+            }         
+        } else {            
+            final Uri data = intent.getData();
+            if (data == null) {
+                showErrorDlg(R.string.msg_no_intent_data, intent);
+                return;
             }
-        }
-
-        LCTX.i("Book codec type: " + codecType);
-        LCTX.i("Book title: " + bookTitle);
-        if (codecType == null) {
-            showErrorDlg(R.string.msg_unknown_intent_data_type, data);
-            return;
+            
+            scheme = ContentScheme.getScheme(intent);
+            if (scheme == ContentScheme.UNKNOWN) {
+                showErrorDlg(R.string.msg_bad_intent, intent);
+                return;
+            }
+            
+            bookTitle = scheme.getResourceName(activity.getContentResolver(), data);
+            codecType = CodecType.getByUri(bookTitle);
+            
+            if (codecType == null) {
+                bookTitle = ContentScheme.getDefaultResourceName(data, "");
+                codecType = CodecType.getByUri(bookTitle);
+            }
+            
+            if (codecType == null) {
+                final String type = intent.getType();
+                LCTX.i("Book mime type: " + type);
+                if (LengthUtils.isNotEmpty(type)) {
+                    codecType = CodecType.getByMimeType(type);
+                }
+            }
+            
+            LCTX.i("Book codec type: " + codecType);
+            LCTX.i("Book title: " + bookTitle);
+            if (codecType == null) {
+                showErrorDlg(R.string.msg_unknown_intent_data_type, data);
+                return;
+            }
         }
 
         documentModel = new DocumentModel(codecType);
         documentModel.addListener(ViewerActivityController.this);
         progressModel = new DecodingProgressModel();
         progressModel.addListener(ViewerActivityController.this);
-
-        final Uri uri = data;
-        if (scheme.temporary) {
-            m_fileName = scheme.key;
-            CacheManager.clear(scheme.key);
-        } else {
-            m_fileName = PathFromUri.retrieve(activity.getContentResolver(), uri);
-        }
-        
-        // Now we have a file name, retrieve the data from the file
-        // and place it in m_fileData.
-        
-        File pdfFile = new File (m_fileName);
-        InputStream is;
-        try {
-            is = new FileInputStream (pdfFile);
-            m_fileData = getBytesUsingInputStream(is);
-        } catch (FileNotFoundException e) {
-            showErrorDlg(R.string.msg_file_not_found, m_fileName);
-            return;
-        } catch (IOException e) {
-            showErrorDlg(R.string.msg_cannot_read_file, m_fileName);
-            return;
-        }
 
         bookSettings = SettingsManager.create(id, m_fileName, scheme.temporary, intent);
         SettingsManager.applyBookSettingsChanges(null, bookSettings);
@@ -992,11 +986,11 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
         protected Throwable doInBackground(final String... params) {
             LCTX.d("BookLoadTask.doInBackground(): start");
             try {
-                final File cached = scheme.loadToCache(intent.getData(), this);
-                if (cached != null) {
-                    m_fileName = cached.getAbsolutePath();
-                    setProgressDialogMessage(startProgressStringId);
-                }
+//                final File cached = scheme.loadToCache(intent.getData(), this);
+//                if (cached != null) {
+//                    m_fileName = cached.getAbsolutePath();
+//                    setProgressDialogMessage(startProgressStringId);
+//                }
                 getView().waitForInitialization();
                 
                 // Open PDF file using data content in file only.

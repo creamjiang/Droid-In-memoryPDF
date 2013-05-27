@@ -22,6 +22,13 @@ import org.emdev.utils.LengthUtils;
 public enum ContentScheme {
 
     FILE("file"),
+    
+    STREAM("stream") {
+        @Override
+        public String getResourceName(final ContentResolver cr, final Uri uri) {
+            return ("PDF DataStream");
+        }
+    },
 
     CONTENT("content", "[E-mail Attachment]") {
 
