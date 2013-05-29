@@ -16,10 +16,6 @@
                 android:icon="@drawable/viewer_menu_searchtext"
                 android:title="Search"/>
             <item
-                android:id="@+id/mainmenu_bookmark"
-                android:icon="@drawable/viewer_menu_bookmark_add"
-                android:title="@string/menu_add_bookmark"/>
-            <item
                 android:id="@+id/mainmenu_goto_page"
                 android:icon="@drawable/viewer_menu_goto"
                 android:title="@string/menu_goto_page"/>

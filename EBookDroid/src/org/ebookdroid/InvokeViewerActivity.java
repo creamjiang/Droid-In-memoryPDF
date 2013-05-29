@@ -20,7 +20,8 @@ public class InvokeViewerActivity extends Activity {
         final Intent myIntent = new Intent(this.getApplicationContext(), ViewerActivity.class);
         try {
             // ViewerSharedData.setPdfDataStream(new FileInputStream ("/mnt/shell/emulated/0/2142.pdf"));
-            ViewerSharedData.setPdfDataStream(new FileInputStream ("/mnt/sdcard/S2.pdf"));
+            //ViewerSharedData.setPdfDataStream(new FileInputStream ("/mnt/sdcard/S2.pdf"));
+            ViewerSharedData.setPdfDataStream(new FileInputStream ("/mnt/sdcard/bpl13210.pdf"));
             startActivity(myIntent);
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
