@@ -319,7 +319,7 @@ public class DocumentModel extends ListenerProxy {
 
         final IBitmapRef image = decodeService.createThumbnail(useEmbeddedIfAvailable, width, height,
                 page.index.docIndex, page.type.getInitialRect());
-        thumbnailFile.setImage(image != null ? image.getBitmap() : null);
+        // thumbnailFile.setImage(image != null ? image.getBitmap() : null);
         BitmapManager.release(image);
     }
 

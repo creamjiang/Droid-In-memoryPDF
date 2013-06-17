@@ -101,7 +101,7 @@ public class SettingsManager {
 
             if (intent != null) {
                 current.persistent = Boolean.parseBoolean(LengthUtils.safeString(intent.getStringExtra("persistent"),
-                        "true"));
+                        Boolean.toString(current.persistent)));
 
                 current.viewMode = DocumentViewMode.valueOf((LengthUtils.safeString(intent.getStringExtra("viewMode"),
                         current.viewMode.toString())));

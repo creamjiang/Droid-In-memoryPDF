@@ -4,6 +4,7 @@ import org.ebookdroid.ui.viewer.ViewerActivity;
 import org.ebookdroid.ui.viewer.ViewerSharedData;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
@@ -17,14 +18,16 @@ public class InvokeViewerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        // Create the intent.
         final Intent myIntent = new Intent(this.getApplicationContext(), ViewerActivity.class);
         try {
-            // ViewerSharedData.setPdfDataStream(new FileInputStream ("/mnt/shell/emulated/0/2142.pdf"));
-            //ViewerSharedData.setPdfDataStream(new FileInputStream ("/mnt/sdcard/S2.pdf"));
-            ViewerSharedData.setPdfDataStream(new FileInputStream ("/mnt/sdcard/bpl13210.pdf"));
+            // Populate the shared static alss ViewerSharedData with
+            // the InputStream
+            ViewerSharedData.setPdfDataStream(new FileInputStream (Environment.getExternalStorageDirectory().getPath() + "/bpl13210.pdf"));
+            
+            // Start the viewer.
             startActivity(myIntent);
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

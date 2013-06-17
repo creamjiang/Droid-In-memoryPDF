@@ -72,29 +72,6 @@
         </menu>
     </item>
     <item
-        android:id="@+id/mainmenu_settings_menu"
-        android:icon="@drawable/viewer_actionbar_menu_settings"
-        android:title="@string/menu_allsettings_menu">
-        <menu>
-            <item
-                android:id="@+id/mainmenu_booksettings"
-                android:icon="@drawable/viewer_menu_booksettings"
-                android:title="@string/menu_booksettings"/>
-            <item
-                android:id="@+id/mainmenu_settings"
-                android:icon="@drawable/common_menu_allsettings"
-                android:title="@string/menu_settings"/>
-            <item
-                android:id="@+id/actions_toggleTouchManagerView"
-                android:icon="@drawable/viewer_menu_tapconfig"
-                android:title="@string/menu_tap_configuration"/>
-            <item
-                android:id="@+id/actions_keyBindings"
-                android:icon="@drawable/viewer_menu_keybindings"
-                android:title="@string/menu_key_bindings"/>
-        </menu>
-    </item>
-    <item
         android:id="@+id/mainmenu_about"
         android:icon="@drawable/common_actionbar_about"
         android:title="@string/menu_about"/>

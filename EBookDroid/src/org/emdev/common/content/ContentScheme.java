@@ -23,7 +23,7 @@ public enum ContentScheme {
 
     FILE("file"),
     
-    STREAM("stream") {
+    STREAM("stream", "[pdf stream]") {
         @Override
         public String getResourceName(final ContentResolver cr, final Uri uri) {
             return ("PDF DataStream");

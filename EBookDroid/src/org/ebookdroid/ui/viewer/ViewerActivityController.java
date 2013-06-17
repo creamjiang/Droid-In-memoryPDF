@@ -283,7 +283,7 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
     public void startDecoding(final String password) {
         final BookLoadTask loadTask = new BookLoadTask(password);
         if (codecType != null && codecType.useCustomFonts ) {
-            EBookDroidApp.checkInstalledFonts(getContext());
+//            EBookDroidApp.checkInstalledFonts(getContext());
         }
         loadTask.run();
     }
@@ -822,6 +822,11 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
     @ActionMethod(ids = R.id.mainmenu_close)
     public void closeActivity(final ActionEx action) {
         if (scheme == null || !scheme.temporary) {
+            getOrCreateAction(R.id.actions_doClose).run();
+            return;
+        }
+        
+        if (scheme != null && scheme.key.equals("[pdf stream]")) {
             getOrCreateAction(R.id.actions_doClose).run();
             return;
         }
