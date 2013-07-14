@@ -540,7 +540,7 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
 
         currentSearchPattern = newPattern;
 
-        executor.execute(new SearchTask(), newPattern, oldPattern, (String) action.getParameter("forward"));
+        executor.execute(new SearchTask(), newPattern, oldPattern, action.getParameter("forward"));
     }
 
     @ActionMethod(ids = R.id.mainmenu_goto_page)
@@ -973,7 +973,7 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
         IUIManager.instance.invalidateOptionsMenu(getManagedComponent());
     }
 
-    final class BookLoadTask extends BaseAsyncTask<String, Throwable> implements Runnable, IProgressIndicator {
+    final class BookLoadTask extends BaseAsyncTask<Object, Throwable> implements Runnable, IProgressIndicator {
 
         private final String m_password;
 
@@ -988,7 +988,7 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
         }
 
         @Override
-        protected Throwable doInBackground(final String... params) {
+        protected Throwable doInBackground(final Object... params) {
             LCTX.d("BookLoadTask.doInBackground(): start");
             try {
 //                final File cached = scheme.loadToCache(intent.getData(), this);
@@ -1066,7 +1066,7 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
 
     }
 
-    final class SearchTask extends AsyncTask<String, String, RectF> implements SearchModel.ProgressCallback,
+    final class SearchTask extends AsyncTask<Object, String, RectF> implements SearchModel.ProgressCallback,
             OnCancelListener {
 
         private ProgressDialog progressDialog;
@@ -1092,12 +1092,12 @@ public class ViewerActivityController extends AbstractActivityController<ViewerA
         }
 
         @Override
-        protected RectF doInBackground(final String... params) {
+        protected RectF doInBackground(final Object... params) {
             try {
                 final int length = LengthUtils.length(params);
 
-                pattern = length > 0 ? params[0] : null;
-                final boolean forward = length >= 3 ? Boolean.parseBoolean(params[2]) : true;
+                pattern = (String) (length > 0 ? params[0] : null);
+                final boolean forward = length >= 3 ? Boolean.parseBoolean((String) params[2]) : true;
 
                 searchModel.setPattern(pattern);
 
